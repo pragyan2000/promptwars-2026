@@ -4,7 +4,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" 
+        content="default-src 'self'; 
+                 script-src 'self'; 
+                 connect-src 'self' https://models.github.ai;
+                 font-src https://fonts.googleapis.com 
+                          https://fonts.gstatic.com;
+                 style-src 'self' https://fonts.googleapis.com;">
   <title>Aura - Student Mental Wellness Tracker</title>
+
   <meta name="description"
     content="A mental wellness tracker tailored for students preparing for NEET, JEE, UPSC, board exams, and other competitive examinations. Track mood, manage exam stress, journal reflections, and receive personalized AI wellness support.">
   <!-- Nunito Google Font -->
@@ -369,7 +377,6 @@
   <script src="config.js" onerror="window.configLoaded = false; console.warn('config.js not found, falling back');"
     onload="window.configLoaded = true;"></script>
   <script src="app.js"></script>
-  <script src="tests.js"></script>
 </body>
 
 </html>

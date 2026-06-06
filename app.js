@@ -1,6 +1,7 @@
 /**
- * Aura - Student Mental Wellness Tracker
- * Frontend application logic and state management.
+ * @file app.js
+ * @description Frontend application logic, state management, and API client for Aura Wellness Tracker.
+ * @version 1.0.0
  */
 
 // Establish global namespace or safe declarations if config.js failed to load
@@ -12,8 +13,32 @@ if (typeof window.configLoaded === 'undefined') {
   'use strict';
 
   /* ==========================================================================
-     GLOBAL CONSTANTS & STRESS TRIGGERS LIST
+     GLOBAL CONSTANTS & SETTINGS (GROUPED)
      ========================================================================== */
+
+  /**
+   * Delay in milliseconds for debouncing journal auto-save operations.
+   * @type {number}
+   */
+  const DEBOUNCE_DELAY_MS = 300;
+
+  /**
+   * Maximum characters allowed for a daily journal reflection.
+   * @type {number}
+   */
+  const MAX_JOURNAL_CHARS = 500;
+
+  /**
+   * Maximum number of journal entries to display in the UI timeline.
+   * @type {number}
+   */
+  const MAX_JOURNAL_ENTRIES = 5;
+
+  /**
+   * Number of days to show in the mood trend chart.
+   * @type {number}
+   */
+  const MOOD_HISTORY_DAYS = 7;
 
   /**
    * The list of valid stress triggers from the challenge description.
@@ -82,6 +107,7 @@ if (typeof window.configLoaded === 'undefined') {
    * @type {number|null}
    */
   let journalSaveTimeout = null;
+
 
   /* ==========================================================================
      DOM CACHE
@@ -208,11 +234,11 @@ if (typeof window.configLoaded === 'undefined') {
    */
   function formatFriendlyDateTime(timestamp) {
     const date = new Date(timestamp);
-    return date.toLocaleDateString(undefined, { 
-      month: 'short', 
-      day: 'numeric', 
-      hour: '2-digit', 
-      minute: '2-digit' 
+    return date.toLocaleDateString(undefined, {
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
     });
   }
 
@@ -342,9 +368,10 @@ if (typeof window.configLoaded === 'undefined') {
       return;
     }
 
-    // Get last 7 calendar days
+    // Get last MOOD_HISTORY_DAYS calendar days
+    // We walk backwards to display trends leading up to today chronologically
     const last7Days = [];
-    for (let i = 6; i >= 0; i--) {
+    for (let i = MOOD_HISTORY_DAYS - 1; i >= 0; i--) {
       const d = new Date();
       d.setDate(d.getDate() - i);
       const dateStr = d.toISOString().split('T')[0];
@@ -497,6 +524,17 @@ if (typeof window.configLoaded === 'undefined') {
   }
 
   /**
+   * Sanitizes user input string to remove any HTML tags to prevent code injection.
+   * @param {string} str - Raw input text.
+   * @returns {string} Sanitized string.
+   */
+  function sanitizeInput(str) {
+    if (!str) return '';
+    // Strip HTML tag boundaries defensively
+    return str.replace(/<[^>]*>/g, '');
+  }
+
+  /**
    * Saves the current journal entry text to localStorage.
    * @param {string} text - The journal reflection input content.
    * @returns {void}
@@ -505,7 +543,8 @@ if (typeof window.configLoaded === 'undefined') {
     dom.saveStatusMsg.textContent = 'Saving...';
     dom.saveStatusMsg.className = 'save-status saving';
 
-    const cleanText = text.trim();
+    // Sanitize input to strip any raw HTML tags before storage
+    const cleanText = sanitizeInput(text).trim();
     const todayDate = getTodayDateString();
 
     // Check if we already have an entry for today. If so, overwrite. Else add.
@@ -542,7 +581,7 @@ if (typeof window.configLoaded === 'undefined') {
   }
 
   /**
-   * Renders the journal timeline showing the last 5 logs.
+   * Renders the journal timeline showing the last MAX_JOURNAL_ENTRIES logs.
    * @returns {void}
    */
   function renderJournalTimeline() {
@@ -551,7 +590,7 @@ if (typeof window.configLoaded === 'undefined') {
 
     // Sort by timestamp descending
     const sorted = [...appState.journal].sort((a, b) => b.timestamp - a.timestamp);
-    const last5 = sorted.slice(0, 5);
+    const last5 = sorted.slice(0, MAX_JOURNAL_ENTRIES);
 
     if (last5.length === 0) {
       const empty = document.createElement('div');
@@ -587,13 +626,14 @@ if (typeof window.configLoaded === 'undefined') {
   function handleJournalInput() {
     const textVal = dom.journalEntry.value;
     const len = textVal.length;
-    dom.charCountInfo.textContent = `${len} / 500 characters`;
-    
-    // Trigger auto-save using the 300ms debouncer
+    dom.charCountInfo.textContent = `${len} / ${MAX_JOURNAL_CHARS} characters`;
+
+    // Trigger auto-save using the DEBOUNCE_DELAY_MS debouncer
     debouncedSave(textVal);
   }
 
-  const debouncedSave = debounce(autoSaveJournal, 300);
+  const debouncedSave = debounce(autoSaveJournal, DEBOUNCE_DELAY_MS);
+
 
   /* ==========================================================================
      FEATURE 4: AI WELLNESS GUIDANCE (FETCH)
@@ -617,7 +657,8 @@ if (typeof window.configLoaded === 'undefined') {
    */
   function updateAISupportState() {
     // 1. Check GITHUB_TOKEN status
-    const hasToken = typeof GITHUB_TOKEN !== 'undefined' && GITHUB_TOKEN !== 'YOUR_GITHUB_TOKEN_HERE' && GITHUB_TOKEN !== '';
+    if (typeof GITHUB_TOKEN === 'undefined') return;
+    const hasToken = GITHUB_TOKEN !== 'YOUR_GITHUB_TOKEN_HERE' && GITHUB_TOKEN !== '';
     if (hasToken) {
       dom.tokenStatusAlert.style.display = 'none';
     } else {
@@ -656,7 +697,7 @@ if (typeof window.configLoaded === 'undefined') {
    */
   async function fetchAIWellnessSupport() {
     const today = getTodayDateString();
-    
+
     // Find today's logs to tailor the prompt
     const todayMoodLog = appState.moods.find(m => m.date === today);
     const todayTriggersLog = appState.triggers.find(t => t.date === today);
@@ -668,7 +709,8 @@ if (typeof window.configLoaded === 'undefined') {
       : 'no specific triggers';
 
     // Verify token
-    const hasToken = typeof GITHUB_TOKEN !== 'undefined' && GITHUB_TOKEN !== 'YOUR_GITHUB_TOKEN_HERE' && GITHUB_TOKEN !== '';
+    if (typeof GITHUB_TOKEN === 'undefined') return;
+    const hasToken = GITHUB_TOKEN !== 'YOUR_GITHUB_TOKEN_HERE' && GITHUB_TOKEN !== '';
     if (!hasToken) {
       showGlobalError('GitHub Token is missing. Please configure config.js.');
       return;
@@ -722,10 +764,10 @@ Please tailor the message, breathing exercise, and study tip specifically to add
       }
 
       const rawData = await response.json();
-      
+
       // Extract completion response content
       let content = rawData.choices[0].message.content.trim();
-      
+
       // Clean up markdown block headers if AI accidentally generated them
       if (content.startsWith('```json')) {
         content = content.replace(/^```json/, '').replace(/```$/, '').trim();
@@ -749,7 +791,7 @@ Please tailor the message, breathing exercise, and study tip specifically to add
       if (!wellnessData.breathing_exercise || typeof wellnessData.breathing_exercise !== 'string' || wellnessData.breathing_exercise.trim() === '') {
         wellnessData.breathing_exercise = 'Inhale for 4 seconds, hold for 4 seconds, exhale for 4 seconds.';
       }
-      
+
       if (!wellnessData.affirmation || typeof wellnessData.affirmation !== 'string' || wellnessData.affirmation.trim() === '') {
         wellnessData.affirmation = 'You are capable, prepared, and doing your best. Believe in yourself.';
       }
@@ -850,12 +892,14 @@ Please tailor the message, breathing exercise, and study tip specifically to add
     appState.moods.forEach(m => loggedDates.add(m.date));
     appState.triggers.forEach(t => loggedDates.add(t.date));
 
+    // If there are no dates logged at all, the streak is zero
     if (loggedDates.size === 0) return 0;
 
     // Convert dates to absolute milliseconds at midnight to compare sequence
+    // This removes timezone noise and hours/minutes/seconds discrepancies
     const uniqueDatesSorted = Array.from(loggedDates)
       .map(dStr => new Date(dStr + 'T00:00:00'))
-      .sort((a, b) => b - a); // Descending (latest first)
+      .sort((a, b) => b - a); // Descending order (newest dates first)
 
     const todayMidnight = new Date(getTodayDateString() + 'T00:00:00');
     const yesterdayMidnight = new Date(getTodayDateString() + 'T00:00:00');
@@ -863,7 +907,8 @@ Please tailor the message, breathing exercise, and study tip specifically to add
 
     const latestLogged = uniqueDatesSorted[0];
 
-    // If latest log is neither today nor yesterday, streak is broken (0)
+    // If the latest logged date is older than yesterday, the user missed a day
+    // which means their active streak has reset to zero
     if (latestLogged < yesterdayMidnight) {
       return 0;
     }
@@ -871,18 +916,20 @@ Please tailor the message, breathing exercise, and study tip specifically to add
     let streak = 1;
     let expectedDate = new Date(latestLogged);
 
+    // Iteratively step backward day by day to count consecutive logs
     for (let i = 1; i < uniqueDatesSorted.length; i++) {
       expectedDate.setDate(expectedDate.getDate() - 1);
       const nextLogged = uniqueDatesSorted[i];
 
-      // Compare difference in days (approximated for DST changes)
+      // Compare difference in days (approximated for daylight saving transitions)
       const diffTime = Math.abs(expectedDate - nextLogged);
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
+      // If next logged date matches the expected consecutive date, increment the streak
       if (diffDays === 0) {
         streak++;
       } else {
-        break; // Streak broken
+        break; // Streak broken: there is a calendar gap
       }
     }
 
@@ -897,7 +944,7 @@ Please tailor the message, breathing exercise, and study tip specifically to add
     const moods = appState.moods;
     if (moods.length === 0) return 'No Logs';
 
-    const oneWeekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+    const oneWeekAgo = Date.now() - MOOD_HISTORY_DAYS * 24 * 60 * 60 * 1000;
     const recentLogs = moods.filter(m => {
       const logTime = new Date(m.date + 'T00:00:00').getTime();
       return logTime >= oneWeekAgo;
@@ -930,7 +977,8 @@ Please tailor the message, breathing exercise, and study tip specifically to add
     const entries = Object.entries(countMap);
     if (entries.length === 0) return 'None';
 
-    // Sort descending by count
+    // Sort descending by trigger occurrence count to determine
+    // the single most common contributor to user stress
     entries.sort((a, b) => b[1] - a[1]);
     return entries[0][0];
   }
@@ -948,12 +996,18 @@ Please tailor the message, breathing exercise, and study tip specifically to add
 
   /**
    * Aggregates and renders all components inside the Dashboard tab.
+   * Wrapped in try/catch to serve as an error boundary, ensuring UI errors
+   * in dashboard rendering don't crash the remainder of the app.
    * @returns {void}
    */
   function renderDashboard() {
-    updateStatsRow();
-    renderMoodChart();
-    renderTriggersChart();
+    try {
+      updateStatsRow();
+      renderMoodChart();
+      renderTriggersChart();
+    } catch (renderError) {
+      showGlobalError('Failed to display the latest dashboard metrics. Try resetting application data.');
+    }
   }
 
   /* ==========================================================================
@@ -1027,12 +1081,12 @@ Please tailor the message, breathing exercise, and study tip specifically to add
   function init() {
     cacheElements();
     loadStateFromStorage();
-    
+
     // Tab switching event registration
     dom.navTabs.forEach(tab => {
       tab.addEventListener('click', handleTabClick);
     });
-    
+
     // Accessibility keyboard navigation on the navigation bar list container
     const navList = document.querySelector('.nav-tabs-list');
     if (navList) {

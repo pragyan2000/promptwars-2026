@@ -92,6 +92,16 @@ The project includes a comprehensive unit testing suite in `tests.js` built usin
 
 ---
 
+## 🔒 Security
+
+We take safety and data integrity seriously:
+- **Gitignored Configuration**: The `config.js` file, which contains your private `GITHUB_TOKEN`, is explicitly configured in `.gitignore`. This ensures it is never committed or pushed to any public/private git repository.
+- **Sensitive Token Warning**: **Never share your GitHub Personal Access Token publicly** or commit it directly. If your token is accidentally exposed, revoke it immediately via GitHub settings.
+- **Content Security Policy (CSP)**: A robust CSP is defined in `index.html` via a meta tag to restrict loading resources only from authorized domains (`'self'`, Google Fonts, and the GitHub Models API endpoint at `https://models.github.ai`). This helps mitigate Cross-Site Scripting (XSS) and injection vulnerabilities.
+
+---
+
 ## 📸 Screenshots
 
 *(Screenshots placeholder - to be added upon deployment)*
+
