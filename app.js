@@ -636,6 +636,21 @@ if (typeof window.configLoaded === 'undefined') {
   }
 
   /**
+   * Validates the structure of the AI response against a strict schema.
+   * Checks that the returned value is a non-null object.
+   * @param {any} data - The parsed object from the API.
+   * @returns {boolean} True if base structure (message, study_tip, emergency_resources) is valid.
+   */
+  function validateAIResponse(data) {
+    if (!data || typeof data !== 'object') return false;
+    // Core critical fields that must be present
+    const criticalFields = ['message', 'study_tip', 'emergency_resources'];
+    return criticalFields.every(field => {
+      return typeof data[field] === 'string' && data[field].trim().length > 0;
+    });
+  }
+
+  /**
    * Generates localized AI wellness guidance and handles GitHub Models API integration.
    * @returns {Promise<void>}
    */
@@ -668,7 +683,8 @@ if (typeof window.configLoaded === 'undefined') {
     `;
 
     const systemPrompt = `You are a warm, empathetic mental health chatbot designed to help students preparing for high-pressure competitive exams like NEET, JEE, UPSC, GATE, CAT, CUET, and boards.
-You MUST respond ONLY with a valid JSON object matching the exact structure below. Do not include markdown code blocks, backticks, or any trailing/leading text outside the JSON.
+You MUST respond ONLY with a valid JSON object matching the exact structure below.
+You must respond with ONLY valid JSON. No extra text. No markdown. No explanations. Every field is required. If you are uncertain, provide a safe generic response. Never leave any field empty or null.
 
 JSON Structure:
 {
@@ -717,15 +733,35 @@ Please tailor the message, breathing exercise, and study tip specifically to add
         content = content.replace(/^```/, '').replace(/```$/, '').trim();
       }
 
-      const wellnessData = JSON.parse(content);
+      let wellnessData;
+      try {
+        wellnessData = JSON.parse(content);
+      } catch (parseErr) {
+        throw new Error('Failed to parse AI response into standard JSON format.');
+      }
+
+      // Check schema validation
+      if (!validateAIResponse(wellnessData)) {
+        throw new Error('AI response structure was incomplete or invalid.');
+      }
+
+      // Apply safe fallbacks for missing/empty fields
+      if (!wellnessData.breathing_exercise || typeof wellnessData.breathing_exercise !== 'string' || wellnessData.breathing_exercise.trim() === '') {
+        wellnessData.breathing_exercise = 'Inhale for 4 seconds, hold for 4 seconds, exhale for 4 seconds.';
+      }
+      
+      if (!wellnessData.affirmation || typeof wellnessData.affirmation !== 'string' || wellnessData.affirmation.trim() === '') {
+        wellnessData.affirmation = 'You are capable, prepared, and doing your best. Believe in yourself.';
+      }
+
       renderWellnessCard(wellnessData);
 
     } catch (err) {
       dom.aiResponseContainer.innerHTML = `
         <div class="ai-placeholder-card" style="border-color: var(--color-danger); color: var(--color-danger);">
           <span class="ai-placeholder-icon" aria-hidden="true">⚠️</span>
-          <h4>Connection Issue</h4>
-          <p>We couldn't connect to the AI service. Details: ${err.message}. Please verify your network and GitHub token config.</p>
+          <h4>Validation Error</h4>
+          <p>We received an invalid or incomplete response from the AI support service. Details: ${escapeHTML(err.message)}.</p>
         </div>
       `;
     }
@@ -733,10 +769,18 @@ Please tailor the message, breathing exercise, and study tip specifically to add
 
   /**
    * Renders the dynamic AI Response output as a premium wellness card.
+   * Ensures no null or undefined properties are rendered.
    * @param {{message: string, breathing_exercise: string, study_tip: string, affirmation: string, emergency_resources: string}} data
    * @returns {void}
    */
   function renderWellnessCard(data) {
+    // Defensively ensure no undefined/null value lands in the card
+    const message = data.message || 'Take a deep breath and keep going.';
+    const breathing = data.breathing_exercise || 'Inhale for 4 seconds, hold for 4 seconds, exhale for 4 seconds.';
+    const studyTip = data.study_tip || 'Focus on one small task at a time to reduce syllabus anxiety.';
+    const affirmation = data.affirmation || 'You are capable, prepared, and doing your best. Believe in yourself.';
+    const emergency = data.emergency_resources || 'VANDREVALA helpline 1860-2662-345 or iCall 9152987821 if student seems very distressed';
+
     const cardHtml = `
       <div class="wellness-card">
         <div class="wellness-card-header">
@@ -747,27 +791,27 @@ Please tailor the message, breathing exercise, and study tip specifically to add
           
           <div class="wellness-section">
             <h4>💌 Reflection</h4>
-            <div class="wellness-content">${escapeHTML(data.message)}</div>
+            <div class="wellness-content">${escapeHTML(message)}</div>
           </div>
 
           <div class="wellness-section">
             <h4>🌬️ Guided Breathing</h4>
-            <div class="wellness-content">${escapeHTML(data.breathing_exercise)}</div>
+            <div class="wellness-content">${escapeHTML(breathing)}</div>
           </div>
 
           <div class="wellness-section">
             <h4>💡 Study & Focus Tip</h4>
-            <div class="wellness-content">${escapeHTML(data.study_tip)}</div>
+            <div class="wellness-content">${escapeHTML(studyTip)}</div>
           </div>
 
           <div class="wellness-section">
             <h4>☀️ Daily Affirmation</h4>
-            <div class="wellness-content" style="font-style: italic; font-weight: 600;">"${escapeHTML(data.affirmation)}"</div>
+            <div class="wellness-content" style="font-style: italic; font-weight: 600;">"${escapeHTML(affirmation)}"</div>
           </div>
 
           <div class="emergency-section" role="alert">
             <h4>🆘 Support Resources Helpline</h4>
-            <p class="emergency-content">${escapeHTML(data.emergency_resources)}</p>
+            <p class="emergency-content">${escapeHTML(emergency)}</p>
           </div>
 
         </div>
@@ -775,6 +819,7 @@ Please tailor the message, breathing exercise, and study tip specifically to add
     `;
     dom.aiResponseContainer.innerHTML = cardHtml;
   }
+
 
   /**
    * Escapes special characters to avoid XSS injections in dynamic cards.
@@ -1042,6 +1087,32 @@ Please tailor the message, breathing exercise, and study tip specifically to add
   }
 
   // Load the app on DOM content ready
-  document.addEventListener('DOMContentLoaded', init);
+  document.addEventListener('DOMContentLoaded', () => {
+    // Only initialize UI if we are in a browser environment with the DOM elements present
+    if (document.getElementById('checkin-form')) {
+      init();
+    }
+  });
+
+  // Expose internals for unit testing
+  window.WellnessApp = {
+    appState,
+    STRESS_TRIGGERS,
+    MOOD_LEVELS,
+    calculateStreak,
+    calculateWeeklyAverageMood,
+    calculateTopStressTrigger,
+    autoSaveJournal,
+    getTodayDateString,
+    loadStateFromStorage,
+    saveMoodsToStorage,
+    saveTriggersToStorage,
+    saveJournalToStorage,
+    fetchAIWellnessSupport,
+    validateAIResponse,
+    init
+  };
 
 })();
+
+

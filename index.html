@@ -1,21 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Aura - Student Mental Wellness Tracker</title>
-  <meta name="description" content="A mental wellness tracker tailored for students preparing for NEET, JEE, UPSC, board exams, and other competitive examinations. Track mood, manage exam stress, journal reflections, and receive personalized AI wellness support.">
+  <meta name="description"
+    content="A mental wellness tracker tailored for students preparing for NEET, JEE, UPSC, board exams, and other competitive examinations. Track mood, manage exam stress, journal reflections, and receive personalized AI wellness support.">
   <!-- Nunito Google Font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
 
   <!-- Main App Container -->
   <div class="app-container">
-    
+
     <!-- Top Header -->
     <header class="app-header" role="banner">
       <div class="header-logo">
@@ -27,11 +30,12 @@
 
     <!-- Main Content Area -->
     <main class="app-main" role="main">
-      
+
       <!-- FEATURE 5 & 1: WELLNESS DASHBOARD PANEL -->
-      <section id="panel-dashboard" class="tab-panel active" role="tabpanel" aria-labelledby="tab-dashboard" tabindex="0">
+      <section id="panel-dashboard" class="tab-panel active" role="tabpanel" aria-labelledby="tab-dashboard"
+        tabindex="0">
         <h2 class="section-title">Your Wellness Overview</h2>
-        
+
         <!-- Stats Row -->
         <div class="stats-grid" role="region" aria-label="Wellness Statistics">
           <div class="stat-card">
@@ -41,7 +45,7 @@
               <span class="stat-label">Current Streak</span>
             </div>
           </div>
-          
+
           <div class="stat-card">
             <span class="stat-icon" aria-hidden="true">😊</span>
             <div class="stat-info">
@@ -49,7 +53,7 @@
               <span class="stat-label">Weekly Mood</span>
             </div>
           </div>
-          
+
           <div class="stat-card">
             <span class="stat-icon" aria-hidden="true">⚠️</span>
             <div class="stat-info">
@@ -57,7 +61,7 @@
               <span class="stat-label">Top Stress Trigger</span>
             </div>
           </div>
-          
+
           <div class="stat-card">
             <span class="stat-icon" aria-hidden="true">✍️</span>
             <div class="stat-info">
@@ -73,7 +77,8 @@
           <div class="chart-card">
             <h3>7-Day Mood Trend</h3>
             <p class="chart-subtitle">Your mood levels over the last week</p>
-            <div class="chart-container" id="mood-chart-container" role="img" aria-label="Bar chart showing 7-day mood history">
+            <div class="chart-container" id="mood-chart-container" role="img"
+              aria-label="Bar chart showing 7-day mood history">
               <!-- Rendered dynamically via JavaScript -->
               <div class="chart-empty-state">No mood logs yet. Log your mood to see your weekly trend!</div>
             </div>
@@ -83,7 +88,8 @@
           <div class="chart-card">
             <h3>Stress Trigger Patterns</h3>
             <p class="chart-subtitle">Frequency of triggers affecting you recently</p>
-            <div class="triggers-pattern-container" id="triggers-chart-container" role="img" aria-label="Stress trigger pattern graph">
+            <div class="triggers-pattern-container" id="triggers-chart-container" role="img"
+              aria-label="Stress trigger pattern graph">
               <!-- Rendered dynamically via JavaScript -->
               <div class="chart-empty-state">No stress triggers tracked yet. Check in to identify triggers!</div>
             </div>
@@ -94,41 +100,46 @@
       <!-- FEATURE 1 & 2: MOOD & STRESS CHECK-IN PANEL -->
       <section id="panel-mood" class="tab-panel" role="tabpanel" aria-labelledby="tab-mood" tabindex="0">
         <h2 class="section-title">Daily Mental Wellness Check-in</h2>
-        
+
         <form id="checkin-form" class="checkin-form" novalidate>
-          
+
           <!-- Mood Selection Card -->
           <div class="form-card">
             <h3>How are you feeling right now?</h3>
             <p class="card-subtitle">Select the emoji that best matches your mood</p>
-            
+
             <div class="mood-selector" role="radiogroup" aria-label="Select your mood today">
-              
-              <button type="button" class="mood-btn" data-mood="1" role="radio" aria-checked="false" aria-label="Very Low mood">
+
+              <button type="button" class="mood-btn" data-mood="1" role="radio" aria-checked="false"
+                aria-label="Very Low mood">
                 <span class="mood-emoji" aria-hidden="true">😢</span>
                 <span class="mood-text">Very Low</span>
               </button>
-              
-              <button type="button" class="mood-btn" data-mood="2" role="radio" aria-checked="false" aria-label="Low mood">
+
+              <button type="button" class="mood-btn" data-mood="2" role="radio" aria-checked="false"
+                aria-label="Low mood">
                 <span class="mood-emoji" aria-hidden="true">🙁</span>
                 <span class="mood-text">Low</span>
               </button>
-              
-              <button type="button" class="mood-btn" data-mood="3" role="radio" aria-checked="false" aria-label="Neutral mood">
+
+              <button type="button" class="mood-btn" data-mood="3" role="radio" aria-checked="false"
+                aria-label="Neutral mood">
                 <span class="mood-emoji" aria-hidden="true">😐</span>
                 <span class="mood-text">Neutral</span>
               </button>
-              
-              <button type="button" class="mood-btn" data-mood="4" role="radio" aria-checked="false" aria-label="Good mood">
+
+              <button type="button" class="mood-btn" data-mood="4" role="radio" aria-checked="false"
+                aria-label="Good mood">
                 <span class="mood-emoji" aria-hidden="true">🙂</span>
                 <span class="mood-text">Good</span>
               </button>
-              
-              <button type="button" class="mood-btn" data-mood="5" role="radio" aria-checked="false" aria-label="Excellent mood">
+
+              <button type="button" class="mood-btn" data-mood="5" role="radio" aria-checked="false"
+                aria-label="Excellent mood">
                 <span class="mood-emoji" aria-hidden="true">😊</span>
                 <span class="mood-text">Excellent</span>
               </button>
-              
+
             </div>
           </div>
 
@@ -136,9 +147,9 @@
           <div class="form-card">
             <h3>What is contributing to your stress today?</h3>
             <p class="card-subtitle">Select all triggers that affect you today (you can select multiple)</p>
-            
+
             <div class="triggers-grid" role="group" aria-label="Stress triggers checklist">
-              
+
               <div class="checkbox-wrapper">
                 <input type="checkbox" id="trigger-syllabus" name="triggers" value="Syllabus pressure">
                 <label for="trigger-syllabus">
@@ -223,11 +234,12 @@
           </div>
 
           <div class="form-actions">
-            <button type="submit" class="primary-btn submit-checkin-btn" aria-label="Submit daily check-in for mood and triggers">
+            <button type="submit" class="primary-btn submit-checkin-btn"
+              aria-label="Submit daily check-in for mood and triggers">
               Save Today's Check-in
             </button>
           </div>
-          
+
           <div id="checkin-feedback" class="feedback-msg" role="status" aria-live="polite"></div>
         </form>
       </section>
@@ -235,21 +247,18 @@
       <!-- FEATURE 3: EMOTION REFLECTION JOURNAL PANEL -->
       <section id="panel-journal" class="tab-panel" role="tabpanel" aria-labelledby="tab-journal" tabindex="0">
         <h2 class="section-title">Daily Reflection Journal</h2>
-        
+
         <div class="journal-layout">
           <!-- Journal input card -->
           <div class="journal-input-card">
             <h3>How are you feeling today? What's on your mind?</h3>
-            <p class="card-subtitle">Take a moment to pour out your thoughts. Writing down feelings helps process them.</p>
-            
+            <p class="card-subtitle">Take a moment to pour out your thoughts. Writing down feelings helps process them.
+            </p>
+
             <div class="journal-textarea-container">
               <label for="journal-entry" class="sr-only">Write your journal reflection here</label>
-              <textarea 
-                id="journal-entry" 
-                maxlength="500" 
-                placeholder="Start writing your thoughts..." 
-                aria-describedby="char-count-info"
-              ></textarea>
+              <textarea id="journal-entry" maxlength="500" placeholder="Start writing your thoughts..."
+                aria-describedby="char-count-info"></textarea>
               <div class="journal-meta">
                 <span class="save-status" id="save-status-msg">All changes saved locally</span>
                 <span id="char-count-info" class="char-count" aria-live="polite">0 / 500 characters</span>
@@ -263,7 +272,8 @@
             <p class="card-subtitle">Your last 5 entries</p>
             <div class="journal-timeline" id="journal-timeline-container" role="feed" aria-label="Journal timeline">
               <!-- Rendered dynamically via JavaScript -->
-              <div class="timeline-empty-state">No journal entries yet. Start writing above to see them in your timeline!</div>
+              <div class="timeline-empty-state">No journal entries yet. Start writing above to see them in your
+                timeline!</div>
             </div>
           </div>
         </div>
@@ -272,37 +282,45 @@
       <!-- FEATURE 4: PERSONALIZED AI WELLNESS SUPPORT PANEL -->
       <section id="panel-wellness" class="tab-panel" role="tabpanel" aria-labelledby="tab-wellness" tabindex="0">
         <h2 class="section-title">Personalized AI Wellness Support</h2>
-        
+
         <div class="ai-support-layout">
           <!-- Token Configuration Alert -->
           <div class="token-alert-card" id="token-status-alert" role="alert">
             <span class="alert-icon" aria-hidden="true">⚙️</span>
             <div class="alert-content">
               <h4>Setup Required</h4>
-              <p>To access AI Personalized Guidance, please copy <code>config.example.js</code> to <code>config.js</code> in your project directory and configure your <strong>GitHub Token</strong>.</p>
+              <p>To access AI Personalized Guidance, please copy <code>config.example.js</code> to
+                <code>config.js</code> in your project directory and configure your <strong>GitHub Token</strong>.
+              </p>
             </div>
           </div>
 
           <!-- Action and Instructions Card -->
           <div class="ai-intro-card">
             <h3>Customized Coping Strategies</h3>
-            <p>Once you check in your mood and stress triggers for today, we can generate a personalized wellness plan using advanced AI models. It includes breathing techniques, focus tips, and affirmations tailored to your current status.</p>
-            
+            <p>Once you check in your mood and stress triggers for today, we can generate a personalized wellness plan
+              using advanced AI models. It includes breathing techniques, focus tips, and affirmations tailored to your
+              current status.</p>
+
             <div class="ai-trigger-container">
               <!-- This button is conditional or displays guidance if check-in not completed -->
-              <button type="button" id="btn-get-wellness" class="primary-btn pulse-glow" aria-label="Generate AI wellness support based on today's check-in" disabled>
+              <button type="button" id="btn-get-wellness" class="primary-btn pulse-glow"
+                aria-label="Generate AI wellness support based on today's check-in" disabled>
                 Get My Wellness Support
               </button>
-              <p id="checkin-guidance-msg" class="guidance-msg">Please save your Mood and Stress Triggers check-in first to enable wellness support.</p>
+              <p id="checkin-guidance-msg" class="guidance-msg">Please save your Mood and Stress Triggers check-in first
+                to enable wellness support.</p>
             </div>
           </div>
 
           <!-- AI Response Card with Live Region -->
-          <div id="ai-response-container" class="ai-response-container" aria-live="polite" role="region" aria-label="AI response output">
+          <div id="ai-response-container" class="ai-response-container" aria-live="polite" role="region"
+            aria-label="AI response output">
             <!-- Rendered dynamically via JavaScript -->
             <div class="ai-placeholder-card">
               <span class="ai-placeholder-icon" aria-hidden="true">🌱</span>
-              <p>Your personalized recommendations will appear here. Click the button above after completing your check-in.</p>
+              <p>Your personalized recommendations will appear here. Click the button above after completing your
+                check-in.</p>
             </div>
           </div>
         </div>
@@ -314,25 +332,29 @@
     <nav class="app-nav" role="navigation" aria-label="Main Navigation">
       <ul class="nav-tabs-list" role="tablist">
         <li role="presentation">
-          <button type="button" class="nav-tab-btn active" id="tab-dashboard" role="tab" aria-selected="true" aria-controls="panel-dashboard" tabindex="0">
+          <button type="button" class="nav-tab-btn active" id="tab-dashboard" role="tab" aria-selected="true"
+            aria-controls="panel-dashboard" tabindex="0">
             <span class="nav-icon" aria-hidden="true">🏠</span>
             <span class="nav-label">Dashboard</span>
           </button>
         </li>
         <li role="presentation">
-          <button type="button" class="nav-tab-btn" id="tab-mood" role="tab" aria-selected="false" aria-controls="panel-mood" tabindex="-1">
+          <button type="button" class="nav-tab-btn" id="tab-mood" role="tab" aria-selected="false"
+            aria-controls="panel-mood" tabindex="-1">
             <span class="nav-icon" aria-hidden="true">😊</span>
             <span class="nav-label">Mood Check-in</span>
           </button>
         </li>
         <li role="presentation">
-          <button type="button" class="nav-tab-btn" id="tab-journal" role="tab" aria-selected="false" aria-controls="panel-journal" tabindex="-1">
+          <button type="button" class="nav-tab-btn" id="tab-journal" role="tab" aria-selected="false"
+            aria-controls="panel-journal" tabindex="-1">
             <span class="nav-icon" aria-hidden="true">✍️</span>
             <span class="nav-label">Journal</span>
           </button>
         </li>
         <li role="presentation">
-          <button type="button" class="nav-tab-btn" id="tab-wellness" role="tab" aria-selected="false" aria-controls="panel-wellness" tabindex="-1">
+          <button type="button" class="nav-tab-btn" id="tab-wellness" role="tab" aria-selected="false"
+            aria-controls="panel-wellness" tabindex="-1">
             <span class="nav-icon" aria-hidden="true">💚</span>
             <span class="nav-label">Wellness Support</span>
           </button>
@@ -344,7 +366,10 @@
 
   <!-- Loading Javascript -->
   <!-- Check config file and then app logic -->
-  <script src="config.js" onerror="window.configLoaded = false; console.warn('config.js not found, falling back');" onload="window.configLoaded = true;"></script>
+  <script src="config.js" onerror="window.configLoaded = false; console.warn('config.js not found, falling back');"
+    onload="window.configLoaded = true;"></script>
   <script src="app.js"></script>
+  <script src="tests.js"></script>
 </body>
+
 </html>

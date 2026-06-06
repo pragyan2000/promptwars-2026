@@ -62,9 +62,33 @@ A premium, highly accessible, and visually calming mental wellness tracker desig
 4. **Run the Application**:
    Since the app is built purely on HTML, CSS, and JS, you can open `index.html` directly in any browser. Alternatively, serve it locally using a light-weight dev server:
    ```bash
-   # Example using Python's built-in server
-   python -m http.server 8000
+    # Example using Python's built-in server
+    python -m http.server 8000
+    ```
+
+---
+
+## 🧪 Running Unit Tests
+
+The project includes a comprehensive unit testing suite in `tests.js` built using vanilla JavaScript `console.assert()`. No external dependencies or packages are required.
+
+### What is covered:
+1. **Mood Tracker Storage**: Asserts that daily mood scores save accurately to localStorage and can be reloaded back into memory state intact.
+2. **Streak Calculation Logic**: Asserts proper calculation of consecutive days logged in a row. Covers edge cases like empty logs (0 days), 1-day logs, multi-day consecutive streaks, and gap days breaking the streak.
+3. **Stress Trigger Frequency**: Asserts calculation of the top stress trigger, counting frequencies accurately across all history and returning "None" when no triggers are logged.
+4. **Journal Storage & Character Counting**: Asserts correct character count computation and validation of journal reflections stored and re-loaded from localStorage.
+5. **API Response Schema Validation**: Asserts that `validateAIResponse` strictly checks the JSON structure (validates presence of critical fields like message and study tips, and invalidates payloads missing properties or containing empty values/null).
+6. **API Error Handling UI**: Mocks fetch failures to verify that app state catches errors gracefully and renders a user-friendly "Validation Error" card instead of crashing or showing a broken UI.
+
+### To run the tests:
+1. Open the application in your web browser (e.g. `http://localhost:8080/`).
+2. Open the **Browser Developer Tools** (Press `F12` or `Ctrl+Shift+I` / `Cmd+Option+I` on Mac).
+3. Navigate to the **Console** tab.
+4. Execute the following command in the developer console to run the tests live:
+   ```javascript
+   const s = document.createElement('script'); s.src = 'tests.js'; document.body.appendChild(s);
    ```
+5. Check the Console outputs for clean `✅ Suite Passed` and `✓ Pass:` messages!
 
 ---
 
