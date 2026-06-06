@@ -1,0 +1,1047 @@
+/* ==========================================================================
+   DESIGN SYSTEM & CUSTOM PROPERTIES
+   ========================================================================== */
+:root {
+  /* Colors - Calming Light Theme */
+  --color-bg: #f4faf7;
+  --color-card-bg: #ffffff;
+  --color-primary: #106b52;        /* Deep Mint Green (High contrast, passes AA/AAA) */
+  --color-primary-light: #e6f6f0;  /* Very soft mint tint */
+  --color-primary-dark: #0a4d3a;   /* Darker mint for interactive active states */
+  --color-secondary: #245c71;      /* Deep Teal/Slate Blue */
+  --color-secondary-light: #e9f5fa;/* Soft blue tint */
+  --color-secondary-dark: #163e4e;
+  --color-accent: #e5904d;         /* Warm amber for streak warning/stats */
+  --color-danger: #b33939;         /* High contrast red for critical distress resources */
+  --color-danger-light: #fbebeb;
+  
+  --color-text: #1b2621;           /* Very dark slate green for readability */
+  --color-text-muted: #4d5c56;     /* Accessible medium gray-green */
+  --color-border: #d3eadf;
+  --color-border-focus: #106b52;
+  
+  /* Mood Level Custom Colors (High contrast combinations) */
+  --color-mood-1: #c94c4c; /* Very Low */
+  --color-mood-2: #e07a5f; /* Low */
+  --color-mood-3: #f2cc8f; /* Neutral */
+  --color-mood-4: #81b29a; /* Good */
+  --color-mood-5: #3d405b; /* Excellent (Deep navy/slate) */
+
+  /* Shadows */
+  --shadow-sm: 0 2px 4px rgba(16, 107, 82, 0.04);
+  --shadow-md: 0 8px 16px rgba(16, 107, 82, 0.06);
+  --shadow-lg: 0 16px 32px rgba(16, 107, 82, 0.08);
+  
+  /* Border Radius */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 24px;
+  --radius-full: 9999px;
+  
+  /* Fonts */
+  --font-family: 'Nunito', system-ui, -apple-system, sans-serif;
+  
+  /* Transitions */
+  --transition-speed-fast: 0.15s;
+  --transition-speed-normal: 0.25s;
+}
+
+/* ==========================================================================
+   BASE STYLES & ACCESSIBILITY
+   ========================================================================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+}
+
+/* Screen Reader Only class for Accessibility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Keyboard Navigable Focus Styles - Minimum 4.5:1 contrast outlines */
+:focus-visible {
+  outline: 3px solid var(--color-border-focus);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+/* Form inputs focus outline */
+input:focus-visible, 
+textarea:focus-visible, 
+button:focus-visible {
+  outline: 3px solid var(--color-border-focus);
+  outline-offset: 2px;
+}
+
+/* ==========================================================================
+   APP CONTAINERS & LAYOUT
+   ========================================================================== */
+.app-container {
+  width: 100%;
+  max-width: 600px;
+  min-height: 100vh;
+  background-color: var(--color-bg);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  padding-bottom: 90px; /* Space for bottom tab navigation */
+  box-shadow: var(--shadow-lg);
+}
+
+/* Header styling */
+.app-header {
+  background-color: var(--color-card-bg);
+  padding: 24px 20px 16px 20px;
+  border-bottom: 1px solid var(--color-border);
+  text-align: center;
+}
+
+.header-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.logo-emoji {
+  font-size: 1.8rem;
+}
+
+.app-header h1 {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--color-primary);
+  letter-spacing: -0.5px;
+}
+
+.header-subtitle {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  font-weight: 600;
+}
+
+/* Main content */
+.app-main {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+/* ==========================================================================
+   TAB PANEL & ROUTING
+   ========================================================================== */
+.tab-panel {
+  display: none;
+  opacity: 0;
+  transition: opacity var(--transition-speed-normal) ease-in-out;
+  will-change: opacity;
+}
+
+.tab-panel.active {
+  display: block;
+  opacity: 1;
+}
+
+.section-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--color-secondary);
+  margin-bottom: 20px;
+}
+
+/* ==========================================================================
+   FEATURE 5: DASHBOARD STYLES (STATS ROW)
+   ========================================================================== */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  background-color: var(--color-card-bg);
+  padding: 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.stat-icon {
+  font-size: 1.8rem;
+  padding: 8px;
+  background-color: var(--color-bg);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+}
+
+.stat-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-value {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--color-text);
+  line-height: 1.2;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+/* Charts Grid */
+.charts-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.chart-card {
+  background-color: var(--color-card-bg);
+  padding: 20px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-md);
+}
+
+.chart-card h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-secondary);
+  margin-bottom: 2px;
+}
+
+.chart-subtitle {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  margin-bottom: 16px;
+}
+
+.chart-empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 120px;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+}
+
+/* ==========================================================================
+   FEATURE 1: PURE CSS 7-DAY BAR CHART
+   ========================================================================== */
+.chart-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  height: 160px;
+  padding: 10px 0;
+  position: relative;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.chart-bar-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  height: 100%;
+  justify-content: flex-end;
+  position: relative;
+}
+
+/* Bar Container to hold the actual CSS Bar height */
+.chart-bar {
+  width: 24px;
+  background-color: var(--color-primary);
+  border-radius: 6px 6px 0 0;
+  min-height: 4px;
+  transition: height 0.5s ease-out;
+  cursor: pointer;
+  position: relative;
+}
+
+.chart-bar:hover {
+  filter: brightness(0.9);
+}
+
+/* Custom HSL / Level-based Colors for Bar Chart */
+.chart-bar[data-level="1"] { background-color: var(--color-mood-1); }
+.chart-bar[data-level="2"] { background-color: var(--color-mood-2); }
+.chart-bar[data-level="3"] { background-color: var(--color-mood-3); }
+.chart-bar[data-level="4"] { background-color: var(--color-mood-4); }
+.chart-bar[data-level="5"] { background-color: var(--color-mood-5); }
+
+/* Day Label */
+.chart-day {
+  margin-top: 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+}
+
+/* Tooltip via Hover CSS */
+.chart-bar::before {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 105%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--color-text);
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-speed-fast) ease-in-out;
+  z-index: 10;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.chart-bar:hover::before {
+  opacity: 1;
+}
+
+/* ==========================================================================
+   FEATURE 2: STRESS TRIGGERS GRAPH
+   ========================================================================== */
+.triggers-pattern-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 10px;
+}
+
+.trigger-pattern-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.trigger-pattern-name {
+  width: 140px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.trigger-pattern-bar-bg {
+  flex: 1;
+  height: 12px;
+  background-color: var(--color-bg);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.trigger-pattern-bar-fill {
+  height: 100%;
+  background-color: var(--color-secondary);
+  border-radius: var(--radius-full);
+  width: 0%; /* Dynamic */
+  transition: width 0.6s cubic-bezier(0.1, 0.8, 0.3, 1);
+}
+
+.trigger-pattern-count {
+  width: 24px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  text-align: right;
+}
+
+/* ==========================================================================
+   CHECK-IN FORMS & SELECTIONS
+   ========================================================================== */
+.checkin-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-card {
+  background-color: var(--color-card-bg);
+  padding: 20px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-md);
+}
+
+.form-card h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-secondary);
+  margin-bottom: 2px;
+}
+
+.card-subtitle {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin-bottom: 20px;
+}
+
+/* Mood Selection Grid */
+.mood-selector {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+}
+
+/* Emojis selection styling with micro-animations */
+.mood-btn {
+  background: none;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 12px 6px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  transition: transform var(--transition-speed-normal) cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+              opacity var(--transition-speed-normal) ease,
+              background-color var(--transition-speed-normal) ease,
+              border-color var(--transition-speed-normal) ease;
+  will-change: transform, opacity;
+}
+
+.mood-btn:hover {
+  background-color: var(--color-bg);
+  transform: scale(1.05);
+}
+
+.mood-emoji {
+  font-size: 1.8rem;
+}
+
+.mood-text {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+}
+
+/* Selected mood state */
+.mood-btn[aria-checked="true"] {
+  background-color: var(--color-primary-light);
+  border-color: var(--color-primary);
+  transform: scale(1.1);
+}
+
+.mood-btn[aria-checked="true"] .mood-text {
+  color: var(--color-primary);
+}
+
+/* Stress triggers checklist */
+.triggers-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Accessible checklist boxes */
+.checkbox-wrapper {
+  display: block;
+  position: relative;
+}
+
+.checkbox-wrapper input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.checkbox-wrapper label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-text);
+  cursor: pointer;
+  padding: 8px 12px;
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  transition: background-color var(--transition-speed-fast) ease,
+              border-color var(--transition-speed-fast) ease;
+}
+
+.checkbox-wrapper label:hover {
+  background-color: var(--color-primary-light);
+  border-color: var(--color-primary);
+}
+
+/* Custom checkbox indicator */
+.checkbox-custom {
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--color-text-muted);
+  border-radius: 4px;
+  display: inline-block;
+  position: relative;
+  background-color: var(--color-card-bg);
+  transition: background-color var(--transition-speed-fast) ease,
+              border-color var(--transition-speed-fast) ease;
+}
+
+.checkbox-wrapper input[type="checkbox"]:checked + label {
+  background-color: var(--color-primary-light);
+  border-color: var(--color-primary);
+}
+
+.checkbox-wrapper input[type="checkbox"]:checked + label .checkbox-custom {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.checkbox-wrapper input[type="checkbox"]:checked + label .checkbox-custom::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 1px;
+  width: 4px;
+  height: 8px;
+  border: solid #ffffff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.checkbox-wrapper input[type="checkbox"]:focus-visible + label {
+  outline: 3px solid var(--color-border-focus);
+}
+
+/* Primary buttons */
+.primary-btn {
+  background-color: var(--color-primary);
+  color: #ffffff;
+  font-family: var(--font-family);
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 14px 28px;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background-color var(--transition-speed-fast) ease,
+              transform var(--transition-speed-fast) ease,
+              box-shadow var(--transition-speed-fast) ease;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(16, 107, 82, 0.15);
+}
+
+.primary-btn:hover:not(:disabled) {
+  background-color: var(--color-primary-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 12px rgba(16, 107, 82, 0.2);
+}
+
+.primary-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.primary-btn:disabled {
+  background-color: var(--color-border);
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.feedback-msg {
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin-top: 10px;
+  min-height: 24px;
+}
+
+.feedback-msg.success {
+  color: var(--color-primary);
+}
+
+.feedback-msg.error {
+  color: var(--color-danger);
+}
+
+/* ==========================================================================
+   FEATURE 3: JOURNAL STYLES
+   ========================================================================== */
+.journal-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.journal-input-card {
+  background-color: var(--color-card-bg);
+  padding: 20px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-md);
+}
+
+.journal-textarea-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.journal-textarea-container textarea {
+  width: 100%;
+  height: 150px;
+  padding: 14px;
+  font-family: var(--font-family);
+  font-size: 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  resize: vertical;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.5;
+  transition: border-color var(--transition-speed-fast) ease;
+}
+
+.journal-textarea-container textarea::placeholder {
+  color: var(--color-text-muted);
+  opacity: 0.7;
+}
+
+.journal-textarea-container textarea:focus {
+  border-color: var(--color-primary);
+}
+
+.journal-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+}
+
+.save-status {
+  color: var(--color-primary);
+  font-weight: 700;
+  transition: opacity 0.3s ease;
+}
+
+.save-status.saving {
+  color: var(--color-secondary);
+}
+
+.char-count {
+  color: var(--color-text-muted);
+  font-weight: 600;
+}
+
+/* Journal Timeline */
+.journal-history-card {
+  background-color: var(--color-card-bg);
+  padding: 20px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-md);
+}
+
+.journal-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 10px;
+}
+
+.timeline-empty-state {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  padding: 24px;
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.timeline-item {
+  position: relative;
+  padding-left: 20px;
+  border-left: 2px solid var(--color-primary);
+}
+
+.timeline-item::before {
+  content: "";
+  position: absolute;
+  left: -7px;
+  top: 4px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: var(--color-primary);
+  border: 2px solid #ffffff;
+}
+
+.timeline-date {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--color-secondary);
+  margin-bottom: 4px;
+  display: block;
+}
+
+.timeline-text {
+  font-size: 0.9rem;
+  color: var(--color-text);
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+
+/* ==========================================================================
+   FEATURE 4: AI WELLNESS GUIDANCE STYLES
+   ========================================================================== */
+.ai-support-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Alert configuration */
+.token-alert-card {
+  background-color: var(--color-danger-light);
+  border: 1px solid var(--color-danger);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  display: flex;
+  gap: 14px;
+  color: var(--color-danger);
+}
+
+.alert-icon {
+  font-size: 1.4rem;
+}
+
+.alert-content h4 {
+  font-size: 0.95rem;
+  font-weight: 800;
+  margin-bottom: 2px;
+}
+
+.alert-content p {
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: var(--color-text);
+}
+
+.ai-intro-card {
+  background-color: var(--color-card-bg);
+  padding: 20px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-md);
+}
+
+.ai-intro-card h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-secondary);
+  margin-bottom: 10px;
+}
+
+.ai-intro-card p {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  margin-bottom: 20px;
+}
+
+.ai-trigger-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.guidance-msg {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+/* Pulsing micro-animation for the primary action button to get AI help */
+.pulse-glow {
+  position: relative;
+}
+
+.pulse-glow:not(:disabled) {
+  animation: pulse-glow-anim 2s infinite;
+}
+
+@keyframes pulse-glow-anim {
+  0% {
+    box-shadow: 0 0 0 0 rgba(16, 107, 82, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(16, 107, 82, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(16, 107, 82, 0);
+  }
+}
+
+/* AI response outputs */
+.ai-response-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.ai-placeholder-card {
+  text-align: center;
+  background-color: var(--color-card-bg);
+  padding: 40px 20px;
+  border-radius: var(--radius-md);
+  border: 2px dashed var(--color-border);
+  color: var(--color-text-muted);
+}
+
+.ai-placeholder-icon {
+  font-size: 2.2rem;
+  margin-bottom: 10px;
+  display: block;
+}
+
+/* Premium AI Wellness Card */
+.wellness-card {
+  background-color: var(--color-card-bg);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+
+.wellness-card-header {
+  background-color: var(--color-primary-light);
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.wellness-card-header h3 {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--color-primary);
+}
+
+.wellness-card-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.wellness-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.wellness-section h4 {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--color-secondary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.wellness-content {
+  font-size: 0.95rem;
+  color: var(--color-text);
+  line-height: 1.5;
+  background-color: var(--color-bg);
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--color-primary);
+}
+
+/* Emergency Helpline specific styles */
+.emergency-section {
+  background-color: var(--color-danger-light);
+  border: 1px solid var(--color-danger);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  margin-top: 8px;
+}
+
+.emergency-section h4 {
+  color: var(--color-danger);
+}
+
+.emergency-content {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-text);
+  line-height: 1.4;
+}
+
+/* Loader style */
+.loader-card {
+  background-color: var(--color-card-bg);
+  padding: 40px 20px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  box-shadow: var(--shadow-md);
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid var(--color-primary-light);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  will-change: transform;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ==========================================================================
+   NAVIGATION BAR (BOTTOM TAB NAVIGATION)
+   ========================================================================== */
+.app-nav {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 76px;
+  background-color: var(--color-card-bg);
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.nav-tabs-list {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  list-style: none;
+}
+
+.nav-tabs-list li {
+  flex: 1;
+  height: 100%;
+}
+
+.nav-tab-btn {
+  width: 100%;
+  height: 100%;
+  background: none;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  cursor: pointer;
+  color: var(--color-text-muted);
+  transition: color var(--transition-speed-fast) ease,
+              background-color var(--transition-speed-fast) ease;
+}
+
+.nav-tab-btn:hover {
+  color: var(--color-primary);
+  background-color: var(--color-bg);
+}
+
+.nav-icon {
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.nav-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+}
+
+/* Active tab style */
+.nav-tab-btn.active {
+  color: var(--color-primary);
+  border-top: 3px solid var(--color-primary);
+  background-color: var(--color-primary-light);
+  padding-top: 0px; /* Adjust for border top offset */
+}
+
+/* ==========================================================================
+   MEDIA QUERIES (MOBILE-FIRST)
+   ========================================================================== */
+@media (max-width: 480px) {
+  .app-container {
+    max-width: 100%;
+    min-height: 100vh;
+    box-shadow: none;
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .mood-selector {
+    gap: 4px;
+  }
+  
+  .mood-emoji {
+    font-size: 1.5rem;
+  }
+  
+  .mood-btn {
+    padding: 10px 4px;
+  }
+}
